@@ -15,13 +15,19 @@ public class Archivos{
     * Constructor para la clase Archivos
     *@param archivo El párametro archivo es el fichero con el que se va trabajar
     */
+
 	public Archivos(String archivo){
 
 		this.directorio = archivo;
 	}
 
+	public Archivos(){
+		this.directorio = null;	
+	}
 
-	//* Método que permite generar una carpeta en donde se almacenarán los datos/*
+	/** 
+	*Método que permite generar una carpeta en donde se almacenarán los datos
+	*/
 
 	private void generarDirectorio(){
 
@@ -33,7 +39,9 @@ public class Archivos{
 		}
 	}
 
-	//* Crea una copia del archivo entrada y lo redirecciona a la carpeta del programa */
+	/** 
+	*Crea una copia del archivo entrada y lo redirecciona a la carpeta del programa
+	*/
 
 	public void redireccionarFichero(){
 
@@ -65,20 +73,66 @@ public class Archivos{
                 	}
         }
 
-    //*Obtiene el nombre del archivo segun su ruta/*
+    /**
+    *Obtiene el nombre del archivo segun su ruta
+    *@return Devuelve un string del nombre de un fichero
+	*/
 
     public String obtenerNombre(){
     	File temp = new File(this.directorio);
     	return temp.getName(); //obtener nombre
     }
 
-    //*Obtiene la direccion del archivo segun su ruta/*
+    /**
+    *Obtiene la direccion del archivo segun su ruta
+    *@return Devuelve un string de la ruta completa de un fichero
+	*/
 
     public String obtenerDireccion(){
     	File temp = new File(this.directorio);
     	return temp.getAbsolutePath(); //obtener ruta completa
     }
 
+    /**
+    *Obtiene el directorio home y lo une con la carpeta musica
+    *@return Devuele un String con el directorio de musica
+	*/
+
+    public String obtenerDirectorioCarpeta(){
+    	String homeUsuario = System.getProperty("user.home"); //obtiene el directorio personal
+    	File directorioMusica = new File(homeUsuario + File.separator + "Música"); // Une el directorio personal con la carpeta musica
+    	
+    	if (directorioMusica.exists()){ // Identifica si existe la carpeta
+    		String directorioFinal = homeUsuario + "/Música";
+    		return directorioFinal;
+    		}
+   
+    	else {
+    		String directorioFinal = homeUsuario + "/Music";
+			 return directorioFinal;
+    	}
+    }
+
+    /**
+    *Permite leer todos los elementos que hay en un directorio y almacenar las direcciones en un arreglo de strings
+    *@param directorio Es la dirección personal del computador
+    */
+
+    public String[] leerArchivosCarpeta(String directorio){
+
+    	File fichero = new File(directorio);
+    	File[] arregloFichero = fichero.listFiles(); // Lista de ficheros
+    	int cantidad = arregloFichero.length;
+    	String[] listaCanciones = new String[cantidad];
+
+    	for(int contador = 0; contador < arregloFichero.length;contador ++){
+
+    		String cancion = arregloFichero[contador].getAbsolutePath(); // Guarda las direcciones
+    		listaCanciones[contador] = cancion; 
+    	}	
+    	return listaCanciones;
+    }
+	
  	public static void main (String [] args) {
 
  		Archivos fichero = new Archivos("/home/kenneth/Descargas/presmate.pptx");
@@ -86,6 +140,8 @@ public class Archivos{
  		fichero.redireccionarFichero();
  		System.out.println(fichero.obtenerNombre());
  		System.out.println(fichero.obtenerDireccion());
- 	
+ 		System.out.println(fichero.obtenerDirectorioCarpeta());
+ 		String variable = fichero.obtenerDirectorioCarpeta();
+ 		System.out.println(fichero.leerArchivosCarpeta(variable)[0]);
  	}
  }
