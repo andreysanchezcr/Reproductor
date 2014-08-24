@@ -41,7 +41,7 @@ public class ManejoDatos {
 
 		public Nodo getSiguiente() {
 
-			return siguiente;
+			return this.siguiente;
 		}
 
 		public void setSiguiente(Nodo proximo) {
@@ -53,7 +53,7 @@ public class ManejoDatos {
 	public ManejoDatos(String[] arregloDatos){
 
 		this.primerNodo = new Nodo(arregloDatos);
-		this.ultimoNodo = new Nodo(arregloDatos);
+		this.ultimoNodo = primerNodo;
 		this.tamaño ++;
 
 	}
@@ -79,7 +79,7 @@ public class ManejoDatos {
 		}
 		Nodo nodoActual = this.primerNodo;
 		for(int contador = 0;contador < indice;contador++){
-
+			System.out.println("entre");
 			nodoActual = nodoActual.getSiguiente();
 		}
 
@@ -97,9 +97,8 @@ public class ManejoDatos {
 		
 		String[] listaDatos2 = {"4","5","6"};
 		listaEnlazada.añadirDatos(listaDatos2);
-		String[] datos = listaEnlazada.obtenerDatos(0);
+		String[] datos = listaEnlazada.obtenerDatos(1);
 		System.out.println(datos[1]);
 
-		
 	}
 }
