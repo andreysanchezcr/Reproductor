@@ -1,47 +1,79 @@
-import java.io.*;
-import org.blinkenlights.jid3.*;
-import org.blinkenlights.jid3.v1.*;
-import org.blinkenlights.jid3.v2.*;
+//package com.mpatric.mp3agic.app;
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import com.mpatric.mp3agic.ID3v1;
+import com.mpatric.mp3agic.ID3v1Tag;
+import com.mpatric.mp3agic.ID3v2;
+import com.mpatric.mp3agic.ID3v24Tag;
+import com.mpatric.mp3agic.InvalidDataException;
+import com.mpatric.mp3agic.Mp3File;
+import com.mpatric.mp3agic.NotSupportedException;
+import com.mpatric.mp3agic.UnsupportedTagException;
+
+public class MetaDatos1{
+    Mp3File mp3file;
+    ID3v1 informacion;
+
+	public MetaDatos1(){
+        
+        try{
+            mp3file = new Mp3File("/home/andrey/Desktop/afterlife1.mp3");//Prueba de impresion
+            informacion = mp3file.getId3v1Tag();
+            System.out.println("Track: " + informacion.getTrack());
+            System.out.println("Artist: " + informacion.getArtist());
+            System.out.println("Title: " + informacion.getTitle());
+            System.out.println("Album: " + informacion.getAlbum());
+            System.out.println("Year: " + informacion.getYear());
+            System.out.println("Genre: " + informacion.getGenre() + " (" + informacion.getGenreDescription() + ")");
+            System.out.println("Comment: " + informacion.getComment());
 
 
-public class MetaDatos1 {
-	Object[] arreglo= new Object[10];
+        }catch(Exception e){
+            System.err.println("Exception caught: "+e);
+        }
+
 		
-
-	
-	ID3Tag[] variable;
-
-
-	public MetaDatos1(String direccion)throws Exception{
-		File correrArchivo = new File(direccion);
-		MediaFile archivoMedia = new MP3File(correrArchivo);
-		variable= archivoMedia.getTags();
-
-
-
+		
 	}
-	public Object[] getDatos()throws Exception{
-
-		arreglo[0]=variable[0];
-
-		arreglo[1]=variable[1];
-		return arreglo;
-	}
-
-	public static void main(String[] args)throws Exception
-	{
-
-		MetaDatos1 prueba = new MetaDatos1("/home/andrey/Desktop/afterlife1.mp3");
-
-		System.out.println(prueba.getDatos()[0]);
-		System.out.println(prueba.getDatos()[1]);
-		System.out.println(prueba.getDatos()[4]);
-		System.out.println(prueba.getDatos()[5]);
+    public String gettitulo(){
+        return informacion.getTitle();
+    }
+    public String getartista(){
+        return informacion.getArtist();
 
 
-		String hola = prueba.getDatos()[1].toString();
-		char perro = hola.charAt(0);
-		System.out.println(perro);
-		//System.out.println(prueba.getArtist())
-	}
+
+    }
+    public String getgenero(){
+        return informacion.getTitle();
+
+
+
+    }
+    public String getalbum(){
+        return informacion.getAlbum();
+
+
+
+    }
+    public String getyear(){
+        return informacion.getYear();
+
+
+
+    }
+    public String gettrack(){
+
+        return informacion.getTitle();
+
+
+
+    }
+    public static void main(String[] args) {
+        MetaDatos1 prueba = new MetaDatos1();
+        System.out.println("Esta en una prueba de lo que imprime"+prueba.gettitulo());
+        }
+
 }
