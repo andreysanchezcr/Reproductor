@@ -1,7 +1,6 @@
 import java.io.*;
 import javax.swing.*;
 
-
 /** 
 *Una clase que permite el manejo de archivos necesarios para el reproductor
 *@author Kenneth Martínez Avendaño
@@ -9,6 +8,9 @@ import javax.swing.*;
 
 public class Archivos{
 
+	/**
+	*Ruta del fichero
+	*/
 	private  String directorio;
 
     /**
