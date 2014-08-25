@@ -13,6 +13,14 @@ public class Datos {
 	*Establece el primer y el ultimo nodo
 	*@param arregloDatos Datos que seran almacenados en un nodo
 	*/	
+
+	// El arreglo debe tener 5 o más posiciones en donde:
+	// Posicion 0 -> ruta
+	// Posicion 1 -> nombre
+	// Posicion 2 -> artisuta
+	// Posicion 3 -> album
+	// Posicion 4 -> genero
+	// Posicion 5 o más -> PlayList
 	public Datos(String[] arregloDatos){
 
 		this.primerNodo = new Nodo(arregloDatos);
@@ -116,7 +124,7 @@ public class Datos {
 		return nodoActual.getArreglo();
 	}
 	// Obtiene el tamaño total de la lista
-	public int obtenerTamaño(){
+	public int getTamaño(){
 
 		return this.tamaño;
 	}
@@ -130,6 +138,7 @@ public class Datos {
 		listaEnlazada.añadirDatos(listaDatos2);
 		String[] datos = listaEnlazada.obtenerDatos(1);
 		System.out.println(datos[1]);
+		System.out.println(listaEnlazada.getTamaño());
 
 		}
 }
