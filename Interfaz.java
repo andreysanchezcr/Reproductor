@@ -1,5 +1,12 @@
 import javax.swing.*;
 import java.awt.event.*;
+import java.io.File; 
+import java.util.logging.Level; 
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javazoom.jlgui.basicplayer.BasicPlayerException;
+
 
 
 
@@ -14,6 +21,7 @@ public class Interfaz extends JFrame// implements ActionListener// implements ja
 	//JTextField text;
 	JLabel l1;
 	JSlider volumen;
+	JFileChooser archivo;
 	public Interfaz(){
 		super("Reproductor");
 		this.setBounds(25,56,200,300);//Dimensiones
@@ -26,9 +34,28 @@ public class Interfaz extends JFrame// implements ActionListener// implements ja
 
 
 	}
+	public void filtros(){
+
+		FileNameExtensionFilter filtro = new FileNameExtensionFilter("Archiv"+ "o MP3", "mp3", "mp3"); 
+		archivo.setFileFilter(filtro); 
+
+        int seleccion = archivo.showOpenDialog(this); 
+        if (seleccion == JFileChooser.APPROVE_OPTION) { 
+            String archivoS = archivo.getSelectedFile().toString(); 
+            System.out.println(archivoS);
+        }
+        //try { 
+        //    miReproductor.control.open(archivoS);//Le decimos al control del player que abra el archivo 
+        //    } catch (BasicPlayerException ex) { 
+        //        System.out.println("Sucedio un error"); 
+        //    } 
+         
+
+	}
 
 	public void cargar(){
 		//eventoPlay evento = new eventoPlay();
+		archivo = new JFileChooser();
 		BtnStop=new JButton("Pausar");
 		BtnAbrir=new JButton("Abrir");
 		BtnPlay = new JButton("Reproducir");
@@ -71,14 +98,14 @@ public class Interfaz extends JFrame// implements ActionListener// implements ja
 
        //Main de prueba
 
-     /*
+     
 	public static void main(String[] args) {
 		//System.out.println("fsaffa");
 		Interfaz Interfaz1 = new Interfaz();
 		//Interfaz1.setSize(200,200);
 	}
 
-    */
+    
 
 			
 
@@ -100,6 +127,7 @@ public class Interfaz extends JFrame// implements ActionListener// implements ja
 				System.out.println("Boton pausa");// Sustituir este campo con las funciones correspondientes
 			}
 			if(event.getSource()==BtnAbrir){
+				filtros();
 
 				System.out.println("Boton abrir");
 				}	
