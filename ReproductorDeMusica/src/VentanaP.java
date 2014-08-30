@@ -1,4 +1,7 @@
-
+/*
+*Importes de librerías necesarias para la reproducción
+*y la creación de la interfaz de usuario.
+*/
 import java.awt.Color; 
 import java.awt.event.ActionListener;
 import java.io.File; 
@@ -11,24 +14,24 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 
+
+/*Implementación de la clase VentanaP que contiene todos los componentes del 
+*reproductor.
+*/
 public class VentanaP extends javax.swing.JFrame {
 
-    DefaultListModel modelo = new DefaultListModel();
-    JButton btnAgregarLR;
-    ReproductorM miReproductor = new ReproductorM();     
-    JFileChooser archivoSeleccionado = new JFileChooser(); 
-    File archivo; 
-    private boolean enReproduccion;
+    DefaultListModel modelo = new DefaultListModel(); //Utilizado por la lista para insertar elementos a la vez y eliminarlo.
+    ReproductorM miReproductor = new ReproductorM();// Intancia del ReproductorM para controlar la ejecución.
+    JFileChooser archivoSeleccionado = new JFileChooser(); // Variable tipo FileChooser que permite acceder a los datos del ordenador. 
+    File archivo; // Guardara la direccion de las canciones.
+    private boolean enReproduccion; // indicará si hay o no archivos en reproduccion. 
 
     /**
      * Creacion de la Ventana Principal 
      */
     public VentanaP() {
         initComponents();
-
         this.getContentPane().setBackground(Color.black);
-        jPanel1.setBackground(new java.awt.Color(12,12,12));
-        jPanel2.setBackground(new java.awt.Color(12,12,12));
     }
 
     @SuppressWarnings("unchecked")
@@ -40,6 +43,8 @@ public class VentanaP extends javax.swing.JFrame {
         volumen = new javax.swing.JSlider();
         btnPlay = new javax.swing.JButton();
         btnStop = new javax.swing.JButton();
+        btnSiguente = new javax.swing.JButton();
+        btnAnterior = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         reproduciendo = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -62,7 +67,7 @@ public class VentanaP extends javax.swing.JFrame {
         setForeground(new java.awt.Color(0, 0, 0));
 
         jPanel1.setBackground(new java.awt.Color(12, 12, 12));
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
+        jPanel1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
         jPanel1.setForeground(new java.awt.Color(12, 12, 12));
         jPanel1.setToolTipText("");
 
@@ -96,6 +101,20 @@ public class VentanaP extends javax.swing.JFrame {
             }
         });
 
+        btnSiguente.setText(">");
+        btnSiguente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSiguenteActionPerformed(evt);
+            }
+        });
+
+        btnAnterior.setText("<");
+        btnAnterior.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAnteriorActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -103,29 +122,35 @@ public class VentanaP extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
+                        .addContainerGap()
+                        .addComponent(btnAnterior)
+                        .addGap(9, 9, 9)
                         .addComponent(btnPlay)
-                        .addGap(33, 33, 33)
-                        .addComponent(btnStop))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnStop)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnSiguente))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(24, 24, 24)
                         .addComponent(volumen, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(33, Short.MAX_VALUE))
+                .addContainerGap(31, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap(21, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnStop)
-                    .addComponent(btnPlay))
+                    .addComponent(btnPlay)
+                    .addComponent(btnSiguente)
+                    .addComponent(btnAnterior))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(volumen, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jPanel2.setBackground(new java.awt.Color(12, 12, 12));
-        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
+        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
 
         reproduciendo.setBackground(new java.awt.Color(12, 12, 12));
         reproduciendo.setForeground(new java.awt.Color(255, 255, 255));
@@ -171,12 +196,12 @@ public class VentanaP extends javax.swing.JFrame {
         );
 
         listaMetaDatos.setBackground(new java.awt.Color(12, 12, 12));
-        listaMetaDatos.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)), "Datos de la Cancíon", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        listaMetaDatos.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true), "Datos de la Cancíon", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         listaMetaDatos.setForeground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setViewportView(listaMetaDatos);
 
         jPanel5.setBackground(new java.awt.Color(12, 12, 12));
-        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
+        jPanel5.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
 
         btnSeleccionarCanción.setText("Seleccionar Canción ");
         btnSeleccionarCanción.addActionListener(new java.awt.event.ActionListener() {
@@ -226,7 +251,7 @@ public class VentanaP extends javax.swing.JFrame {
         jMenuItem1.setText("Pública");
         jMenu1.add(jMenuItem1);
 
-        crearListaRMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        crearListaRMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         crearListaRMenu.setText("Crear Lista de reproducción");
         crearListaRMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -254,16 +279,16 @@ public class VentanaP extends javax.swing.JFrame {
                                 .addContainerGap()
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
                                 .addGap(45, 45, 45)
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(31, 31, 31)
+                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(39, 39, 39)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1)
                             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(18, 36, Short.MAX_VALUE)
+                        .addGap(18, 18, Short.MAX_VALUE)
                         .addComponent(vol))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
@@ -275,25 +300,25 @@ public class VentanaP extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18))
-                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(243, 243, 243)
                                 .addComponent(vol)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 195, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jScrollPane1)
                                 .addGap(18, 18, 18)))
                         .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)))
+                        .addGap(26, 26, 26))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(36, 36, 36)))
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -357,7 +382,9 @@ public class VentanaP extends javax.swing.JFrame {
     private void volumenAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_volumenAncestorAdded
 
     }//GEN-LAST:event_volumenAncestorAdded
-     /**
+    
+    
+    /**
      * Método que regula el volumen de la canción. 
      */
     private void volumenStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_volumenStateChanged
@@ -370,42 +397,55 @@ public class VentanaP extends javax.swing.JFrame {
             
     }//GEN-LAST:event_volumenStateChanged
      /**
-     * Método que contiene el evento del botón Seleccionar Canción el cual habre el JFileChooser para escoger
+     * Contiene el evento del botón Seleccionar Canción el cual habre el JFileChooser para escoger
      * las canciones. 
      */
     private void btnSeleccionarCanciónActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarCanciónActionPerformed
-       // Crea un filtro para obtener solo archivos con es formato
+       // Crea un filtro para obtener solo archivos con es formato "mp3","ogg","wav"
         FileNameExtensionFilter filtro = new FileNameExtensionFilter("Música", "mp3","ogg","wav"); 
-        archivoSeleccionado.setFileFilter(filtro); // Selección del archivo
+        archivoSeleccionado.setFileFilter(filtro); // Selección del archivo filtrado
 
         int seleccion = archivoSeleccionado.showOpenDialog(this); 
 
-        if (seleccion == JFileChooser.APPROVE_OPTION) { 
+        if (seleccion == JFileChooser.APPROVE_OPTION) { //Solo continuara si se selecciona un archivo del formato establecido.
             archivo = archivoSeleccionado.getSelectedFile(); 
-            modelo.addElement(archivo.getName());
+            modelo.addElement(archivo.getName());//Agrega la canción seleccionada a la lista.
             
             try { 
-                miReproductor.control.open(archivo);//Le decimos al control del player que abra el archivo 
+                miReproductor.control.open(archivo);//Se llama al Control creado en ReproductoM para que abra el archivo 
             } catch (BasicPlayerException ex) { 
                 Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex); 
             } 
         } 
-        listaCanciones.setModel(modelo);
+        listaCanciones.setModel(modelo);//Aplica el modelo a la lista 
     }//GEN-LAST:event_btnSeleccionarCanciónActionPerformed
-
+    
+    /*
+    * Contiene el evento del botón elminar. 
+    */
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        modelo.removeElement(listaCanciones.getSelectedValue());
+        modelo.removeElement(listaCanciones.getSelectedValue()); // Elimminar la el elmento seleccionado de la lista
     }//GEN-LAST:event_btnEliminarActionPerformed
 
+    /*
+    *Contiene el evento para generar una nueva lista de reproduccion 
+    */
     private void crearListaRMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearListaRMenuActionPerformed
        VtnListaReproduccion vPlayList = new VtnListaReproduccion(this,true);
        vPlayList.setVisible(true);
-        //btnAgregarLR.addActionListener((ActionListener) this);
     }//GEN-LAST:event_crearListaRMenuActionPerformed
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
 
     }//GEN-LAST:event_jMenu1ActionPerformed
+
+    private void btnSiguenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguenteActionPerformed
+        
+    }//GEN-LAST:event_btnSiguenteActionPerformed
+
+    private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAnteriorActionPerformed
 
     /**
      * @param args the command line arguments
@@ -443,9 +483,11 @@ public class VentanaP extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAnterior;
     private javax.swing.JButton btnEliminar;
     public javax.swing.JButton btnPlay;
     private javax.swing.JButton btnSeleccionarCanción;
+    private javax.swing.JButton btnSiguente;
     public javax.swing.JButton btnStop;
     private javax.swing.JMenuItem crearListaRMenu;
     private javax.swing.JMenu jMenu1;
