@@ -12,17 +12,19 @@ public class AlgoritmosBusqueda{
 
 	}
 
-	public String buscarArtista(String nombreArtista){
+	public String buscarCancion(String nombre, int tipo){
 
 		for(int contador = 0;contador < this.cajaDatos.getTamaño();contador++){
-			String nombre = this.cajaDatos.obtenerDatos(contador)[2];
+			String variable = this.cajaDatos.obtenerDatos(contador)[tipo];
 
-			if(nombre == nombreArtista){
+			if(variable == nombre){
 				return this.cajaDatos.obtenerDatos(contador)[0];
 			}
 		}
 		return null;
 	}
+
+
 
 	public static void main(String[] args) {
 
@@ -34,10 +36,7 @@ public class AlgoritmosBusqueda{
 		String[] datos = listaEnlazada.obtenerDatos(1);
 
 		AlgoritmosBusqueda artista = new AlgoritmosBusqueda(listaEnlazada);
-
-		System.out.println(datos[1]);
-		System.out.println(listaEnlazada.getTamaño());
-		System.out.println(artista.buscarArtista("A"));
+		System.out.println(artista.buscarCancion("Ab1",3));
 
 		}
 }

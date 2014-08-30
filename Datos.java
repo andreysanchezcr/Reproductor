@@ -17,7 +17,7 @@ public class Datos {
 	// El arreglo debe tener 5 o más posiciones en donde:
 	// Posicion 0 -> ruta
 	// Posicion 1 -> nombre
-	// Posicion 2 -> artisuta
+	// Posicion 2 -> artista
 	// Posicion 3 -> album
 	// Posicion 4 -> genero
 	// Posicion 5 o más -> PlayList
@@ -131,10 +131,10 @@ public class Datos {
 	
 	public static void main(String[] args) {
 
-		String[] listaDatos1 = {"1","2","3"};
+		String[] listaDatos1 = {"R","N","A","Ab","G","play1","play2","play3"};
 		Datos listaEnlazada = new Datos(listaDatos1);
 		
-		String[] listaDatos2 = {"4","5","6"};
+		String[] listaDatos2 = {"R1","N1","A1","Ab1","G1","play11","play21","play31"};
 		listaEnlazada.añadirDatos(listaDatos2);
 		String[] datos = listaEnlazada.obtenerDatos(1);
 		System.out.println(datos[1]);
