@@ -284,7 +284,7 @@ public class VentanaP extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(39, 39, 39)
+                        .addGap(70, 70, 70)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1)
                             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -397,7 +397,7 @@ public class VentanaP extends javax.swing.JFrame {
             
     }//GEN-LAST:event_volumenStateChanged
      /**
-     * Contiene el evento del botón Seleccionar Canción el cual habre el JFileChooser para escoger
+     * Contiene el evento del botón Seleccionar Canción el cual abre el JFileChooser para escoger
      * las canciones. 
      */
     private void btnSeleccionarCanciónActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarCanciónActionPerformed
@@ -408,11 +408,15 @@ public class VentanaP extends javax.swing.JFrame {
         int seleccion = archivoSeleccionado.showOpenDialog(this); 
 
         if (seleccion == JFileChooser.APPROVE_OPTION) { //Solo continuara si se selecciona un archivo del formato establecido.
-            archivo = archivoSeleccionado.getSelectedFile(); 
+            archivo = archivoSeleccionado.getSelectedFile();
+            System.out.println(archivo);
+            String variable = archivo.toString();
+            System.out.println(variable);
             modelo.addElement(archivo.getName());//Agrega la canción seleccionada a la lista.
             
             try { 
                 miReproductor.control.open(archivo);//Se llama al Control creado en ReproductoM para que abra el archivo 
+                
             } catch (BasicPlayerException ex) { 
                 Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex); 
             } 
