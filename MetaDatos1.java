@@ -18,7 +18,7 @@ public class MetaDatos1{
     public MetaDatos1(){
         
         try{
-            mp3file = new Mp3File("/home/silvia/Dropbox/syl/musik/bachata/ansiedad - Torito.mp3");//Prueba de impresion
+            mp3file = new Mp3File("/home/andrey/Desktop/Skrillex/Skrillex - Voltage (2012)/09 Imma try it out (Rene Eberstark edit)_[EnfermoGP].mp3");//Prueba de impresion
             informacion = mp3file.getId3v1Tag();
             long num = mp3file.getLengthInSeconds();
 
@@ -70,10 +70,29 @@ public class MetaDatos1{
 
         return informacion.getTrack();
     }
+    public void getImage() throws UnsupportedTagException, InvalidDataException, IOException, NotSupportedException{
+         if (mp3file.hasId3v2Tag()) {
+            ID3v2 imagen = mp3file.getId3v2Tag();
+             byte[] imageData = imagen.getAlbumImage();
+             if (imageData != null) {
+                String mimeType = imagen.getAlbumImageMimeType();
+                System.out.println("Mime type: " + mimeType);
+                // Write image to file - can determine appropriate file extension from the mime type
+                RandomAccessFile file = new RandomAccessFile("albuuuum-artwork", "rw");
+                file.write(imageData);    //
+                file.close();
 
-
-    public static void main(String[] args) {
-        MetaDatos1 prueba = new MetaDatos1();
+             }
+             else
+                System.out.println("No tiene imagen");
         }
+    }
+
+
+    /*public static void main(String[] args)throws UnsupportedTagException, InvalidDataException, IOException, NotSupportedException {
+        MetaDatos1 prueba = new MetaDatos1();
+        prueba.getartista();
+        prueba.getImage();
+        }*/
 
 }
