@@ -18,10 +18,11 @@ public class Archivos{
     *@param direccion El párametro direccion es el fichero con el que se va trabajar
     */
 
-	public Archivos(String direccion){
+	public Archivos(){
 
-		this.directorio = direccion;
+		//this.directorio = direccion;
 	}
+
 
 	/** 
 	*Método que permite generar una carpeta en donde se almacenarán los datos
@@ -149,24 +150,24 @@ public class Archivos{
     		String cancion = arregloFichero[contador].getAbsolutePath(); // Guarda las direcciones
 
             if (cancion.endsWith(".mp3")||cancion.endsWith(".wav")||cancion.endsWith(".ogg")){ // Busca solo archivos de musica
-                Archivos archivoTemp = new Archivos(cancion);
+                Archivos archivoTemp = new Archivos();
                 archivoTemp.redireccionarFichero(cancion,carpeta);
             } 
     	}	
     }
 	
- 	public static void main (String [] args) {
+ 	/*public static void main (String [] args) {
 
- 		Archivos fichero = new Archivos("/home/kenneth/Descargas/presmate.pptx");
+ 		Archivos fichero = new Archivos("/home/andrey/Desktop/Programacion/albuuuum-artwork");
  		fichero.generarDirectorio("FilesMusic");
- 		fichero.redireccionarFichero("/home/kenneth/Descargas/presmate.pptx",null);
+ 		fichero.redireccionarFichero("/home/andrey/Desktop/Programacion/albuuuum-artwork",null);
         String variable = fichero.obtenerDirectorioMusica();
         System.out.println(variable);
  		fichero.leerArchivosCarpeta(variable,null);
         fichero.generarDirectorio("FilesMusic" + File.separator + "AndreyPlayo");
-        fichero.redireccionarFichero("/home/kenneth/Descargas/presmate.pptx","AndreyPlayo");
+        fichero.redireccionarFichero("/home/andrey/Desktop/Programacion/albuuuum-artwork","AndreyPlayo");
         System.out.println(fichero.revisarCarpeta("AndreyPlayo"));
         System.out.println(fichero.revisarCarpeta("holaumundo"));
 
- 	}
+ 	}*/
  }
