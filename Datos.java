@@ -136,8 +136,8 @@ public class Datos {
 		
 		String[] listaDatos2 = {"R1","N1","A1","Ab1","G1","play11","play21","play31"};
 		listaEnlazada.añadirDatos(listaDatos2);
-		String[] datos = listaEnlazada.obtenerDatos(1);
-		System.out.println(datos[1]);
+		String[] datos = listaEnlazada.obtenerDatos(0);
+		System.out.println(datos[4]);
 		System.out.println(listaEnlazada.getTamaño());
 
 		}
