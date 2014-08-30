@@ -53,6 +53,7 @@ public class VentanaP extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        crearListaRMenu = new javax.swing.JMenuItem();
         jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -61,7 +62,7 @@ public class VentanaP extends javax.swing.JFrame {
         setForeground(new java.awt.Color(0, 0, 0));
 
         jPanel1.setBackground(new java.awt.Color(12, 12, 12));
-        jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
         jPanel1.setForeground(new java.awt.Color(12, 12, 12));
         jPanel1.setToolTipText("");
 
@@ -124,6 +125,7 @@ public class VentanaP extends javax.swing.JFrame {
         );
 
         jPanel2.setBackground(new java.awt.Color(12, 12, 12));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
 
         reproduciendo.setBackground(new java.awt.Color(12, 12, 12));
         reproduciendo.setForeground(new java.awt.Color(255, 255, 255));
@@ -155,6 +157,7 @@ public class VentanaP extends javax.swing.JFrame {
         jScrollPane1.setViewportView(listaCanciones);
 
         jPanel4.setBackground(new java.awt.Color(12, 12, 12));
+        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -168,10 +171,12 @@ public class VentanaP extends javax.swing.JFrame {
         );
 
         listaMetaDatos.setBackground(new java.awt.Color(12, 12, 12));
+        listaMetaDatos.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)), "Datos de la Cancíon", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         listaMetaDatos.setForeground(new java.awt.Color(255, 255, 255));
         jScrollPane2.setViewportView(listaMetaDatos);
 
         jPanel5.setBackground(new java.awt.Color(12, 12, 12));
+        jPanel5.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 153, 153)));
 
         btnSeleccionarCanción.setText("Seleccionar Canción ");
         btnSeleccionarCanción.addActionListener(new java.awt.event.ActionListener() {
@@ -210,7 +215,7 @@ public class VentanaP extends javax.swing.JFrame {
 
         jMenuBar1.setBackground(new java.awt.Color(125, 125, 125));
 
-        jMenu1.setText("Opciones");
+        jMenu1.setText("Listas de Reproducción ");
         jMenu1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenu1ActionPerformed(evt);
@@ -218,13 +223,17 @@ public class VentanaP extends javax.swing.JFrame {
         });
 
         jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Crear PlayList");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItem1.setText("Pública");
+        jMenu1.add(jMenuItem1);
+
+        crearListaRMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_MASK));
+        crearListaRMenu.setText("Crear Lista de reproducción");
+        crearListaRMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
+                crearListaRMenuActionPerformed(evt);
             }
         });
-        jMenu1.add(jMenuItem1);
+        jMenu1.add(crearListaRMenu);
 
         jMenuBar1.add(jMenu1);
 
@@ -303,7 +312,6 @@ public class VentanaP extends javax.swing.JFrame {
                     
                     try { 
                         miReproductor.control.play(); //Reproduce el archivo
-                        
                         btnPlay.setText("Pausa"); // Cambia el texto del botón
                         enReproduccion = true; // Cambia el estado de la variable a true puesto que si esta en reproducción.
                         reproduciendo.setText("Reproduciendo: "+archivo.getName());
@@ -389,11 +397,11 @@ public class VentanaP extends javax.swing.JFrame {
         modelo.removeElement(listaCanciones.getSelectedValue());
     }//GEN-LAST:event_btnEliminarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+    private void crearListaRMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_crearListaRMenuActionPerformed
        VtnListaReproduccion vPlayList = new VtnListaReproduccion(this,true);
        vPlayList.setVisible(true);
         //btnAgregarLR.addActionListener((ActionListener) this);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_crearListaRMenuActionPerformed
 
     private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
 
@@ -439,6 +447,7 @@ public class VentanaP extends javax.swing.JFrame {
     public javax.swing.JButton btnPlay;
     private javax.swing.JButton btnSeleccionarCanción;
     public javax.swing.JButton btnStop;
+    private javax.swing.JMenuItem crearListaRMenu;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
