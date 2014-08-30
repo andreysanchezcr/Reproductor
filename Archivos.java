@@ -15,25 +15,21 @@ public class Archivos{
 
     /**
     * Constructor para la clase Archivos
-    *@param archivo El párametro archivo es el fichero con el que se va trabajar
+    *@param direccion El párametro direccion es el fichero con el que se va trabajar
     */
 
-	public Archivos(String archivo){
+	public Archivos(String direccion){
 
-		this.directorio = archivo;
-	}
-
-	public Archivos(){
-		this.directorio = null;	
+		this.directorio = direccion;
 	}
 
 	/** 
 	*Método que permite generar una carpeta en donde se almacenarán los datos
 	*/
 
-	private void generarDirectorio(){
+	public void generarDirectorio(String nombre){
 
-		File archivo = new File("pruebaReproductor");
+		File archivo = new File(nombre);
 		if (archivo.exists()){ // Revisa si existe la carpeta
 		}
 		else{
@@ -41,21 +37,40 @@ public class Archivos{
 		}
 	}
 
+    public boolean revisarCarpeta(String nombre){
+
+        File archivo = new File("FilesMusic" + File.separator + nombre);
+        return archivo.exists();
+    }
+
 	/** 
 	*Crea una copia del archivo entrada y lo redirecciona a la carpeta del programa
 	*/
 
-	public void redireccionarFichero(){
+	public void redireccionarFichero(String direccion, String carpeta){
 
-                File archivo = new File(this.directorio);
+                File archivo = new File(direccion);
+        		String nombre = archivo.getName();
+                String direccionCompleta;
+                
+                // Une una direccion con nombre de carpeta y nombre de archivo
+                if (carpeta == null){
 
-        		String nombre = archivo.getName(); 
+                    direccionCompleta = "FilesMusic" + File.separator + nombre; 
+                }
+                
+                else {
 
-                File destino = new File("pruebaReproductor" + File.separator + nombre); // Une la carpeta con el nombre del archivo de entrada
+                    direccionCompleta =  "FilesMusic" + File.separator + carpeta + File.separator + nombre;
+    
+                }
+
+                 File destino = new File(direccionCompleta);
+                
 
 
                 try {
-                        InputStream entrada = new FileInputStream(this.directorio); //Obtiene los bytes del directorio
+                        InputStream entrada = new FileInputStream(direccion); //Obtiene los bytes del directorio
                         OutputStream salida = new FileOutputStream(destino); //Lee los flujos de bytes
                                 
                         byte[] contenido = new byte[1024];
@@ -100,7 +115,7 @@ public class Archivos{
     *@return Devuele un String con el directorio de musica
 	*/
 
-    public String obtenerDirectorioCarpeta(){
+    public String obtenerDirectorioMusica(){
     	String homeUsuario = System.getProperty("user.home"); //obtiene el directorio personal
     	File directorioMusica = new File(homeUsuario + File.separator + "Música"); // Une el directorio personal con la carpeta musica
     	
@@ -115,12 +130,14 @@ public class Archivos{
     	}
     }
 
+
     /**
-    *Permite leer todos los elementos que hay en un directorio y almacenar las direcciones en un arreglo de strings
+    *Permite leer los elementos de tipo (".mp3", ".wav", ".ogg") que hay en un directorio 
+    *y sobre redireccionar el fichero a la carpeta FilesMusic
     *@param directorio Es la dirección personal del computador
     */
 
-    public String[] leerArchivosCarpeta(String directorio){
+    public void leerArchivosCarpeta(String directorio, String carpeta){
 
     	File fichero = new File(directorio);
     	File[] arregloFichero = fichero.listFiles(); // Lista de ficheros
@@ -130,20 +147,26 @@ public class Archivos{
     	for(int contador = 0; contador < arregloFichero.length;contador ++){
 
     		String cancion = arregloFichero[contador].getAbsolutePath(); // Guarda las direcciones
-    		listaCanciones[contador] = cancion; 
+
+            if (cancion.endsWith(".mp3")||cancion.endsWith(".wav")||cancion.endsWith(".ogg")){ // Busca solo archivos de musica
+                Archivos archivoTemp = new Archivos(cancion);
+                archivoTemp.redireccionarFichero(cancion,carpeta);
+            } 
     	}	
-    	return listaCanciones;
     }
 	
  	public static void main (String [] args) {
 
  		Archivos fichero = new Archivos("/home/kenneth/Descargas/presmate.pptx");
- 		fichero.generarDirectorio();
- 		fichero.redireccionarFichero();
- 		System.out.println(fichero.obtenerNombre());
- 		System.out.println(fichero.obtenerDireccion());
- 		System.out.println(fichero.obtenerDirectorioCarpeta());
- 		String variable = fichero.obtenerDirectorioCarpeta();
- 		System.out.println(fichero.leerArchivosCarpeta(variable)[0]);
+ 		fichero.generarDirectorio("FilesMusic");
+ 		fichero.redireccionarFichero("/home/kenneth/Descargas/presmate.pptx",null);
+        String variable = fichero.obtenerDirectorioMusica();
+        System.out.println(variable);
+ 		fichero.leerArchivosCarpeta(variable,null);
+        fichero.generarDirectorio("FilesMusic" + File.separator + "AndreyPlayo");
+        fichero.redireccionarFichero("/home/kenneth/Descargas/presmate.pptx","AndreyPlayo");
+        System.out.println(fichero.revisarCarpeta("AndreyPlayo"));
+        System.out.println(fichero.revisarCarpeta("holaumundo"));
+
  	}
  }
