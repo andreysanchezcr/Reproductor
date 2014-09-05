@@ -1,4 +1,4 @@
-package tarea.programada1;
+package reproductormusica1;
 
 import javax.swing.ImageIcon;
 import java.awt.Image;

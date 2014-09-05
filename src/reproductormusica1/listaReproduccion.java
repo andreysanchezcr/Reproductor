@@ -1,10 +1,10 @@
-package tarea.programada1;
+package reproductormusica1;
 
 import java.awt.Color;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import tarea.programada1.Parser;
+import reproductormusica1.Parser;
 
 
 public class listaReproduccion extends javax.swing.JDialog {

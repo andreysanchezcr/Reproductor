@@ -1,4 +1,4 @@
-package tarea.programada1;
+package reproductormusica1;
 
 /*
 *Importes de librerías necesarias para la reproducción
@@ -1286,7 +1286,7 @@ public final class VentanaP extends javax.swing.JFrame {
       }
         PanelListaCanciones.setSelectedIndex(contador);
        
-    //GEN-LAST:event_buscadorCActionPerformed
+                                             
     }//GEN-LAST:event_buscadorCActionPerformed
 
     private void tituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tituloActionPerformed
