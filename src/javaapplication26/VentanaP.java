@@ -1112,10 +1112,9 @@ public final class VentanaP extends javax.swing.JFrame {
         
         System.out.println(a);
         for(int i=0;a.getSize()>i;i++){
-            if(contador!=0){
+
             supers=supers+a.getElementAt(i).toString();
             supers=supers+"@";
-            }
             contador++;
             
         }
