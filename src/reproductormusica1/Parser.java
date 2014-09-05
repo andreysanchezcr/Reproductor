@@ -1,4 +1,4 @@
-package reproductormusica1;
+package tarea.programada1;
 
 import java.io.File;
 import java.io.FileNotFoundException;

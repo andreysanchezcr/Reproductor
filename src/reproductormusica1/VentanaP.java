@@ -1,4 +1,4 @@
-package reproductormusica1;
+package tarea.programada1;
 
 /*
 *Importes de librerías necesarias para la reproducción
@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Image; 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
@@ -29,7 +30,16 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 /*Implementación de la clase VentanaP que contiene todos los componentes del 
 *reproductor.
 */
-public class VentanaP extends javax.swing.JFrame {
+public final class VentanaP extends javax.swing.JFrame {
+    Archivos nuevoArchivo = new Archivos();
+    String[][]arregloNombreCanciones;
+    Datos nuevoDatos = new Datos();
+    MetaDatos1 informacionMusica = new MetaDatos1();
+    
+    
+    
+    
+    
     ReproductorM miReproductor = new ReproductorM();
     String listadereproduccionactual;
     DefaultListModel modelodefecto2 ;
@@ -53,20 +63,93 @@ public class VentanaP extends javax.swing.JFrame {
     public static File archivo1; // Guardara la direccion de las canciones.
 
     private boolean enReproduccion; // indicará si hay o no archivos en reproduccion. 
-    //private String[] listaDatos1;
 
-    /**
-     * Creacion de la Ventana Principal 
+    /*
+     * Implementación de la VentanaPrincipal 
      * @throws javazoom.jl.decoder.JavaLayerException
      * @throws java.io.FileNotFoundException
      */
-    public VentanaP()throws JavaLayerException, FileNotFoundException, IOException {
+    public VentanaP()throws JavaLayerException, FileNotFoundException, IOException, UnsupportedTagException, InvalidDataException {
         crearlistadefault("default","");
 
         initComponents();
+        cargarmusica();
+
 
         this.getContentPane().setBackground(Color.black);
+        modelodefecto = new DefaultListModel();
+            
+        this.arregloNombreCanciones = nuevoArchivo.leerArchivosCarpeta("FilesMusic", null);//Nombre canciones y direcciones
+        // Nombre de canciones en el 0 y direcciones en el 1
+        
+        String[] arregloDeDirecciones = new String[arregloNombreCanciones[1].length];
+      
+        // Posicion 0 -> ruta
+	// Posicion 1 -> nombre
+	// Posicion 2 -> artista
+	// Posicion 3 -> album
+	// Posicion 4 -> genero
+ 
+            String[]listaInformacionMusica = new String[5];
+        
+        for(int i=0;i < arregloNombreCanciones[0].length;i++){
+            
+            modelodefecto.addElement(arregloNombreCanciones[0][i]);
+            arregloDeDirecciones[i] = arregloNombreCanciones[1][i];
+            informacionMusica.agregarc(arregloDeDirecciones[i]);
+        
+            
+            listaInformacionMusica[0]= arregloDeDirecciones[i];
+            listaInformacionMusica[1]= arregloNombreCanciones[0][i];
+            try{ 
+                listaInformacionMusica[2]= informacionMusica.getartista();
+            }catch(Exception RunTime){
+                listaInformacionMusica[2] = "";
+            }
+            try{
+                listaInformacionMusica[3] = informacionMusica.getalbum();
+            }catch(Exception RunTime){
+                listaInformacionMusica[3]= "";
+            }
+            try{
+                listaInformacionMusica[4] = informacionMusica.getgenero();
+            }catch(Exception RunTime){
+                listaInformacionMusica[4]= "";
+            }
+         
+        
+            
+           this.nuevoDatos.añadirDatos(listaInformacionMusica);
+           System.out.println(nuevoDatos.obtenerDatos(0)[1]);
+                      System.out.println(nuevoDatos.getTamaño());
+
+                      System.out.println(nuevoDatos.obtenerDatos(0)[2]);
+           System.out.println(nuevoDatos.obtenerDatos(0)[3]);
+           System.out.println(nuevoDatos.obtenerDatos(0)[4]);
+           //System.out.println(nuevoDatos.obtenerDatos(1)[0]);
+           //System.out.println(nuevoDatos.obtenerDatos(1)[1]);
+           //System.out.println(nuevoDatos.obtenerDatos(1)[2]);
+
+        }
+               
+           PanelListaCanciones.setModel(modelodefecto);
+            Archivos p = new Archivos();
+        String[] a;
+            
+        a=p.leerArchivosCarpeta("FilesMusic", null)[0];
+        
+        
+        //               modelodefecto = new DefaultListModel();
+      //                  for(int i=0;a.length>i;i++){
+    //                        modelodefecto.addElement(a[i]);
+            
+  //               }
+//            PanelListaCanciones.setModel(modelodefecto);
+              
     }
+    
+    
+    
     public void crearlistadefault(String nombre,String informacion) throws IOException{
               
             //Escribimos en el fichero un String y un caracter 97 (a)
@@ -78,6 +161,29 @@ public class VentanaP extends javax.swing.JFrame {
                 //ejemplo de escritura
             }
  }
+    public void cargarmusica(){
+        try{
+        Archivos s = new Archivos();
+        String p=s.obtenerDirectorioMusica();
+        String[] canciones = s.leerArchivosCarpeta(p, null)[1];
+        System.out.println("Prueba de cargar musica"+canciones.length);
+ 
+        Archivos h = new Archivos();
+        //System.out.println(d+canc);
+        for(int i =0;i<canciones.length;i++){
+            if(canciones[i]!=null)
+            h.redireccionarFichero(canciones[i],null );}
+                ///System.out.println("Se ha agregado: "+canciones[i]);
+        System.out.println("Se han agreegado las canciones");
+        }catch(Exception a){
+            System.out.println("No se ha podido cargar la musica");
+        }
+        
+        
+        
+        
+        
+    }
         
     
 
@@ -94,41 +200,42 @@ public class VentanaP extends javax.swing.JFrame {
         btnSiguente = new javax.swing.JButton();
         btnAnterior = new javax.swing.JButton();
         porsentaje = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
+        PanelAbajo = new javax.swing.JPanel();
         reproduciendo = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
+        ListaRepActual = new javax.swing.JLabel();
         abrirplay = new javax.swing.JButton();
         lista = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        listaCanciones = new javax.swing.JList();
-        jPanel4 = new javax.swing.JPanel();
+        PanelListaCanciones = new javax.swing.JList();
+        PanelIcono = new javax.swing.JPanel();
         icono = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         btnSeleccionarCanción = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        agregarCancion = new javax.swing.JButton();
         guardar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        playlist = new javax.swing.JList();
+        PanelListaReproduccion = new javax.swing.JList();
+        PanelDatosCancion = new javax.swing.JPanel();
+        guardarCancion = new javax.swing.JButton();
+        ltitulo = new javax.swing.JLabel();
+        lalbum = new javax.swing.JLabel();
         ltiempo = new javax.swing.JLabel();
+        lartista = new javax.swing.JLabel();
         titulo = new javax.swing.JTextField();
+        laño = new javax.swing.JLabel();
         album = new javax.swing.JTextField();
+        lgenero = new javax.swing.JLabel();
         artista = new javax.swing.JTextField();
         año = new javax.swing.JTextField();
         genero = new javax.swing.JTextField();
-        guardarCancion = new javax.swing.JButton();
+        PanelBusqueda = new javax.swing.JPanel();
         Buscador = new javax.swing.JTextField();
         buscadorC = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
+        busquedaPor = new javax.swing.JComboBox();
+        Menu = new javax.swing.JMenuBar();
+        MenuPlayList = new javax.swing.JMenu();
         crearListaRMenu = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -194,26 +301,23 @@ public class VentanaP extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(btnAnterior)
-                                .addGap(9, 9, 9)
-                                .addComponent(btnPlay)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnStop)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnSiguente))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(24, 24, 24)
-                                .addComponent(volumen, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 21, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(volumen, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(porsentaje, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(197, 197, 197)
-                        .addComponent(porsentaje, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(btnAnterior)
+                        .addGap(9, 9, 9)
+                        .addComponent(btnPlay, javax.swing.GroupLayout.DEFAULT_SIZE, 61, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnStop)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSiguente)
+                        .addGap(26, 26, 26))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -225,21 +329,23 @@ public class VentanaP extends javax.swing.JFrame {
                     .addComponent(btnSiguente)
                     .addComponent(btnAnterior))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(volumen, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(porsentaje, javax.swing.GroupLayout.PREFERRED_SIZE, 0, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(porsentaje, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        jPanel2.setBackground(new java.awt.Color(12, 12, 12));
-        jPanel2.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
+        PanelAbajo.setBackground(new java.awt.Color(12, 12, 12));
+        PanelAbajo.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
 
         reproduciendo.setBackground(new java.awt.Color(12, 12, 12));
+        reproduciendo.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         reproduciendo.setForeground(new java.awt.Color(255, 255, 255));
         reproduciendo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(12, 12, 12)));
 
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Lista de Reproduccion Actual:                   ");
+        ListaRepActual.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        ListaRepActual.setForeground(new java.awt.Color(255, 255, 255));
+        ListaRepActual.setText("Lista de Reproduccion Actual:");
 
         abrirplay.setText("Abrir lista de Reproduccion");
         abrirplay.addActionListener(new java.awt.event.ActionListener() {
@@ -248,63 +354,61 @@ public class VentanaP extends javax.swing.JFrame {
             }
         });
 
-        lista.setText("jTextField1");
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout PanelAbajoLayout = new javax.swing.GroupLayout(PanelAbajo);
+        PanelAbajo.setLayout(PanelAbajoLayout);
+        PanelAbajoLayout.setHorizontalGroup(
+            PanelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelAbajoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
+                .addComponent(ListaRepActual, javax.swing.GroupLayout.PREFERRED_SIZE, 234, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(reproduciendo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(28, 28, 28)
                 .addComponent(lista, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(abrirplay)
                 .addGap(26, 26, 26))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+        PanelAbajoLayout.setVerticalGroup(
+            PanelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelAbajoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(PanelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(abrirplay)
                     .addComponent(reproduciendo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(abrirplay))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelAbajoLayout.createSequentialGroup()
+                        .addGroup(PanelAbajoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(ListaRepActual, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lista, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
-        listaCanciones.setBackground(new java.awt.Color(12, 12, 12));
-        listaCanciones.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true), "Lista de Canciones", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
-        listaCanciones.setForeground(new java.awt.Color(255, 255, 255));
-        listaCanciones.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        listaCanciones.setToolTipText("");
-        listaCanciones.setSelectionBackground(new java.awt.Color(0, 153, 153));
-        listaCanciones.setSelectionForeground(new java.awt.Color(0, 0, 0));
-        jScrollPane1.setViewportView(listaCanciones);
+        PanelListaCanciones.setBackground(new java.awt.Color(12, 12, 12));
+        PanelListaCanciones.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true), "Lista de Canciones", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 18), new java.awt.Color(255, 255, 255))); // NOI18N
+        PanelListaCanciones.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        PanelListaCanciones.setForeground(new java.awt.Color(255, 255, 255));
+        PanelListaCanciones.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        PanelListaCanciones.setToolTipText("");
+        PanelListaCanciones.setSelectionBackground(new java.awt.Color(0, 153, 153));
+        PanelListaCanciones.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        jScrollPane1.setViewportView(PanelListaCanciones);
 
-        jPanel4.setBackground(new java.awt.Color(12, 12, 12));
-        jPanel4.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
+        PanelIcono.setBackground(new java.awt.Color(12, 12, 12));
+        PanelIcono.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout PanelIconoLayout = new javax.swing.GroupLayout(PanelIcono);
+        PanelIcono.setLayout(PanelIconoLayout);
+        PanelIconoLayout.setHorizontalGroup(
+            PanelIconoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelIconoLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(icono, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE))
+                .addComponent(icono, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+        PanelIconoLayout.setVerticalGroup(
+            PanelIconoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelIconoLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(icono, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
                 .addContainerGap())
@@ -327,14 +431,14 @@ public class VentanaP extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Agregar cancion");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        agregarCancion.setText("Agregar cancion");
+        agregarCancion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                agregarCancionActionPerformed(evt);
             }
         });
 
-        guardar.setText("Guardar");
+        guardar.setText("Guardar lista de Reproduccion ");
         guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 guardarActionPerformed(evt);
@@ -348,13 +452,13 @@ public class VentanaP extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addComponent(btnSeleccionarCanción)
-                .addGap(18, 18, 18)
+                .addGap(31, 31, 31)
                 .addComponent(btnEliminar)
-                .addGap(39, 39, 39)
-                .addComponent(jButton2)
+                .addGap(31, 31, 31)
+                .addComponent(agregarCancion)
                 .addGap(35, 35, 35)
                 .addComponent(guardar)
-                .addContainerGap(54, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -363,34 +467,24 @@ public class VentanaP extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSeleccionarCanción)
                     .addComponent(btnEliminar)
-                    .addComponent(jButton2)
+                    .addComponent(agregarCancion)
                     .addComponent(guardar))
                 .addContainerGap(29, Short.MAX_VALUE))
         );
 
-        playlist.setBackground(new java.awt.Color(12, 12, 12));
-        playlist.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true), "Lista de reproducción", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
-        playlist.setForeground(new java.awt.Color(255, 255, 255));
-        playlist.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        playlist.setToolTipText("");
-        playlist.setSelectionBackground(new java.awt.Color(0, 153, 153));
-        playlist.setSelectionForeground(new java.awt.Color(0, 0, 0));
-        jScrollPane3.setViewportView(playlist);
-        playlist.getAccessibleContext().setAccessibleName("Lista de reproduccion");
+        PanelListaReproduccion.setBackground(new java.awt.Color(12, 12, 12));
+        PanelListaReproduccion.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true), "Lista de reproducción", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Tahoma", 0, 18), new java.awt.Color(255, 255, 255))); // NOI18N
+        PanelListaReproduccion.setForeground(new java.awt.Color(255, 255, 255));
+        PanelListaReproduccion.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        PanelListaReproduccion.setToolTipText("");
+        PanelListaReproduccion.setSelectionBackground(new java.awt.Color(0, 153, 153));
+        PanelListaReproduccion.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        jScrollPane3.setViewportView(PanelListaReproduccion);
+        PanelListaReproduccion.getAccessibleContext().setAccessibleName("Lista de reproduccion");
 
-        ltiempo.setText("Tiempo: ");
-
-        titulo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tituloActionPerformed(evt);
-            }
-        });
-
-        album.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                albumActionPerformed(evt);
-            }
-        });
+        PanelDatosCancion.setBackground(new java.awt.Color(12, 12, 12));
+        PanelDatosCancion.setBorder(javax.swing.BorderFactory.createTitledBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true), "Datos de la Canción", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 18), new java.awt.Color(255, 255, 255))); // NOI18N
+        PanelDatosCancion.setForeground(new java.awt.Color(255, 255, 255));
 
         guardarCancion.setText("Guardar Cambios");
         guardarCancion.addActionListener(new java.awt.event.ActionListener() {
@@ -399,7 +493,122 @@ public class VentanaP extends javax.swing.JFrame {
             }
         });
 
-        Buscador.setText("Buscador");
+        ltitulo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        ltitulo.setForeground(new java.awt.Color(255, 255, 255));
+        ltitulo.setText("Titulo: ");
+
+        lalbum.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lalbum.setForeground(new java.awt.Color(255, 255, 255));
+        lalbum.setText("Álbum ");
+
+        ltiempo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        ltiempo.setForeground(new java.awt.Color(255, 255, 255));
+        ltiempo.setText("Tiempo: ");
+
+        lartista.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lartista.setForeground(new java.awt.Color(255, 255, 255));
+        lartista.setText("Artista:");
+
+        titulo.setEditable(false);
+        titulo.setBackground(new java.awt.Color(0, 153, 153));
+        titulo.setForeground(new java.awt.Color(255, 255, 255));
+        titulo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tituloActionPerformed(evt);
+            }
+        });
+
+        laño.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        laño.setForeground(new java.awt.Color(255, 255, 255));
+        laño.setText("Año:");
+
+        album.setBackground(new java.awt.Color(102, 102, 102));
+        album.setForeground(new java.awt.Color(255, 255, 255));
+        album.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                albumActionPerformed(evt);
+            }
+        });
+
+        lgenero.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lgenero.setForeground(new java.awt.Color(255, 255, 255));
+        lgenero.setText("Género:");
+
+        artista.setBackground(new java.awt.Color(0, 153, 153));
+        artista.setForeground(new java.awt.Color(255, 255, 255));
+
+        año.setBackground(new java.awt.Color(102, 102, 102));
+        año.setForeground(new java.awt.Color(255, 255, 255));
+
+        genero.setBackground(new java.awt.Color(0, 153, 153));
+        genero.setForeground(new java.awt.Color(255, 255, 255));
+
+        javax.swing.GroupLayout PanelDatosCancionLayout = new javax.swing.GroupLayout(PanelDatosCancion);
+        PanelDatosCancion.setLayout(PanelDatosCancionLayout);
+        PanelDatosCancionLayout.setHorizontalGroup(
+            PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelDatosCancionLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(ltiempo)
+                    .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(guardarCancion)
+                        .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(PanelDatosCancionLayout.createSequentialGroup()
+                                .addComponent(lgenero, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(genero))
+                            .addGroup(PanelDatosCancionLayout.createSequentialGroup()
+                                .addComponent(ltitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(titulo))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelDatosCancionLayout.createSequentialGroup()
+                                .addComponent(lalbum, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(album, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(PanelDatosCancionLayout.createSequentialGroup()
+                                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lartista, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(laño, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(artista)
+                                    .addComponent(año, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                .addContainerGap(41, Short.MAX_VALUE))
+        );
+        PanelDatosCancionLayout.setVerticalGroup(
+            PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelDatosCancionLayout.createSequentialGroup()
+                .addGap(32, 32, 32)
+                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ltitulo))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(album, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lalbum))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lartista)
+                    .addComponent(artista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(laño)
+                    .addComponent(año, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PanelDatosCancionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lgenero)
+                    .addComponent(genero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ltiempo)
+                .addGap(18, 18, 18)
+                .addComponent(guardarCancion)
+                .addContainerGap(14, Short.MAX_VALUE))
+        );
+
+        PanelBusqueda.setBackground(new java.awt.Color(12, 12, 12));
+        PanelBusqueda.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
+
         Buscador.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 BuscadorActionPerformed(evt);
@@ -413,28 +622,47 @@ public class VentanaP extends javax.swing.JFrame {
             }
         });
 
-        jLabel3.setText("Titulo: ");
-
-        jLabel4.setText("Album: ");
-
-        jLabel5.setText("Artista:");
-
-        jLabel6.setText("Año:");
-
-        jLabel7.setText("Genero:");
-
-        jMenuBar1.setBackground(new java.awt.Color(125, 125, 125));
-
-        jMenu1.setText("Listas de Reproducción ");
-        jMenu1.addActionListener(new java.awt.event.ActionListener() {
+        busquedaPor.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Nombre", "Artista", "Álbum", "Género" }));
+        busquedaPor.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenu1ActionPerformed(evt);
+                busquedaPorActionPerformed(evt);
             }
         });
 
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
-        jMenuItem1.setText("Pública");
-        jMenu1.add(jMenuItem1);
+        javax.swing.GroupLayout PanelBusquedaLayout = new javax.swing.GroupLayout(PanelBusqueda);
+        PanelBusqueda.setLayout(PanelBusquedaLayout);
+        PanelBusquedaLayout.setHorizontalGroup(
+            PanelBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelBusquedaLayout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(buscadorC)
+                .addGap(18, 18, 18)
+                .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(busquedaPor, 0, 114, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        PanelBusquedaLayout.setVerticalGroup(
+            PanelBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelBusquedaLayout.createSequentialGroup()
+                .addContainerGap(25, Short.MAX_VALUE)
+                .addGroup(PanelBusquedaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buscadorC)
+                    .addComponent(busquedaPor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(22, 22, 22))
+        );
+
+        Menu.setBackground(new java.awt.Color(0, 51, 51));
+        Menu.setForeground(new java.awt.Color(255, 255, 255));
+
+        MenuPlayList.setForeground(new java.awt.Color(255, 255, 255));
+        MenuPlayList.setText("Listas de Reproducción ");
+        MenuPlayList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MenuPlayListActionPerformed(evt);
+            }
+        });
 
         crearListaRMenu.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_P, java.awt.event.InputEvent.CTRL_MASK));
         crearListaRMenu.setText("Crear Lista de reproducción");
@@ -443,14 +671,11 @@ public class VentanaP extends javax.swing.JFrame {
                 crearListaRMenuActionPerformed(evt);
             }
         });
-        jMenu1.add(crearListaRMenu);
+        MenuPlayList.add(crearListaRMenu);
 
-        jMenuBar1.add(jMenu1);
+        Menu.add(MenuPlayList);
 
-        jMenu2.setText("Salir");
-        jMenuBar1.add(jMenu2);
-
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(Menu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -458,135 +683,90 @@ public class VentanaP extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(25, 25, 25)
-                                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(27, 27, 27))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(buscadorC, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(18, 18, 18)
-                                                .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, 192, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addGap(37, 37, 37)))
-                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(35, 35, 35)
-                                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(35, 35, 35)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(ltiempo, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(jLabel3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                            .addComponent(año, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 135, Short.MAX_VALUE)
-                                            .addComponent(artista, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(album, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(titulo, javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(genero)))))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(79, 79, 79)
-                                .addComponent(guardarCancion)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
-                        .addComponent(vol))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(PanelAbajo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(130, 130, 130))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(59, 59, 59)
+                                .addComponent(PanelIcono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(27, 27, 27)
+                                .addComponent(PanelDatosCancion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(PanelBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(40, 40, 40)))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 364, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(vol)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(243, 243, 243)
+                .addComponent(vol)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 21, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(222, 222, 222)
-                                .addComponent(vol))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(album, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(artista, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel5))
-                                .addGap(18, 18, 18)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(año, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel6))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(genero, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel7))
-                                .addGap(9, 9, 9)
-                                .addComponent(ltiempo)
-                                .addGap(37, 37, 37)
-                                .addComponent(guardarCancion))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(buscadorC)
-                                    .addComponent(Buscador, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addComponent(PanelIcono, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(PanelDatosCancion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(jScrollPane3)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(PanelBusqueda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(26, 26, 26)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(PanelAbajo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
         );
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
-     /**
+     /*
      * Método que contiene el evento del botón Play, el cual al pulsarlo 
      * reproduce la musica y cambia a Pause automáticamente. 
      */
     private void btnPlayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlayActionPerformed
-        //C:\Users\ricardo\Desktop\iiiii.mp3
-try{
-        System.out.println(listaCanciones.getSelectedValue().toString());
+
+    try{
+        System.out.println(PanelListaReproduccion.getSelectedValue().toString());
         
         Archivos x = new Archivos();
         String c=x.obtenerDireccion("FilesMusic");
-        canc= listaCanciones.getSelectedValue().toString();
-        System.out.println("Cancion seleccionada: "+c+listaCanciones.getSelectedValue().toString());
-        cancionactual=c+listaCanciones.getSelectedValue().toString();
+        canc= PanelListaReproduccion.getSelectedValue().toString();
+        System.out.println("Cancion seleccionada: "+c+PanelListaReproduccion.getSelectedValue().toString());
+        cancionactual=c+PanelListaReproduccion.getSelectedValue().toString();
         System.out.println(cancionactual);
         MetaDatos1 metainformacion1 = new MetaDatos1();
         
         try {
-            metainformacion1.agregarc(listaCanciones.getSelectedValue().toString());
+            metainformacion1.agregarc(PanelListaReproduccion.getSelectedValue().toString());
         } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
-           metainformacion1.agregarc(c+listaCanciones.getSelectedValue().toString());
+           metainformacion1.agregarc(c+PanelListaReproduccion.getSelectedValue().toString());
 
             System.out.println("No se han toado los metadatos");
         }
@@ -594,34 +774,18 @@ try{
         File a = new File("cover.jpg");
         a.delete();}
         catch(Exception a){
-            System.out.println("El archivoo no se ha podido eliminar");
+            System.out.println("El archivo no se ha podido eliminar");
         }
                 try {
             metainformacion1.getImage();
         } catch (UnsupportedTagException | InvalidDataException | IOException | NotSupportedException ex) {
             System.out.println("no se ha podido obtener la imagen");
         }
-               // Imagen ima = new Imagen ("cover.jpg");
-                
-           //////////////////////7777     
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-       ///////////////////////77         
-                
+
                 ImageIcon iicono = new ImageIcon("cover.jpg");
                    Image imagen = iicono.getImage();
                     ImageIcon iconoEscalado = new ImageIcon (imagen.getScaledInstance(100,150,Image.SCALE_SMOOTH));
-                   //JLabel etiqueta = new JLabel (iconoEscalado);
-                
-                    
+                          
         icono.setIcon(iconoEscalado);
         titulo.setText(metainformacion1.gettitulo());
         año.setText(metainformacion1.getyear());
@@ -630,12 +794,24 @@ try{
         ltiempo.setText("Tiempo: "+metainformacion1.gettiempo());
         
         //********************************// Se verifica si arch es el que tiene el control de archivos
-        File arch= new File(c+listaCanciones.getSelectedValue().toString());
+        File arch= new File(c+PanelListaReproduccion.getSelectedValue().toString());
 //                File arch= new File("C:\\Users\\ricardo\\Desktop\\reptide.mp3");
 
                 switch (btnPlay.getText()) { //Toma el texto escrito en el botón y lo examina en dos casos
             
             case "Play":  
+                              if(btnPlay.getText()=="Pausa"){try {
+            miReproductor.control.open(arch);
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            miReproductor.control.resume();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+         }
  
                 if (!enReproduccion) { // Verifica si hay algun archovo en reproduccion y alguna direccion
         try {
@@ -671,15 +847,43 @@ try{
                 } 
                 btnPlay.setText("Play"); 
                 break; 
-
+                }
+            }
+            catch(Exception a){
+                System.out.println("No existe cancion seleccionada");
+                
+                    PanelListaReproduccion.setSelectedIndex(PanelListaReproduccion.getSelectedIndex());
+        Archivos x = new Archivos();
+        String c=x.obtenerDireccion("FilesMusic");
+                File arch1= new File(c+PanelListaReproduccion.getSelectedValue().toString());
         
+                if(btnPlay.getText()=="Play"){try {
+            miReproductor.control.open(arch1);
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
         }
-}
-catch(Exception a){
-    System.out.println("No existe cancion seleccionada");
-}
+        try {
+            miReproductor.control.play();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+         }
+    /*                if(btnPlay.getText()=="Pausa"){try {
+            miReproductor.control.open(arch1);
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            miReproductor.control.resume();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+         }*/}
+    
     }//GEN-LAST:event_btnPlayActionPerformed
-     /**
+     /*
      * Método que contiene el evento del botón Stop, que detiene la canción por completo
      * al pulsarlo el botón que en el momento esta en estado de Pause automáticamente a Play. 
      */
@@ -727,41 +931,22 @@ catch(Exception a){
         Archivos z = new Archivos();
         String d=z.obtenerDireccion("FilesMusic");
         if (seleccion == JFileChooser.APPROVE_OPTION) {
-                Object selecc = listaCanciones.getSelectedValue();
-                //System.out.println("")
-                Object componentes =listaCanciones.getComponents();
+                Object selecc = PanelListaCanciones.getSelectedValue();
+                Object componentes =PanelListaCanciones.getComponents();
                 ListModel modelol;
-                modelol= listaCanciones.getModel();
-                //DefaultListModel modelodefecto;
-                
-                modelodefecto = new DefaultListModel();
-
-                for(int i=0;modelol.getSize()!=i;i++){
-                    modelodefecto.addElement(modelol.getElementAt(i));
-                    System.out.println(modelol.getElementAt(i));
-                    
-                }
- 
+                modelol= PanelListaCanciones.getModel();
                 archivo = archivoSeleccionado.getSelectedFile();
                 System.out.println("El nombre del archivo a direccionar es: "+archivo);
                 Archivos direc = new Archivos();
-                System.out.println("Este es archivo: "+archivo.getName().toString());
+                System.out.println("Este es archivo: "+archivo.toString());
                          
                     Archivos h = new Archivos();
-            
-                   // File borrado = new File(c+canc);
-
-    
+                    System.out.println(d+canc);
                     h.redireccionarFichero(archivo.toString(),null );
-
-         //   h.redireccionarFichero(c+canc,null);      
-                
-          
-                    
-                
+               
                 modelodefecto.addElement(archivo.getName());
 
-                listaCanciones.setModel(modelodefecto);
+                PanelListaCanciones.setModel(modelodefecto);
                 System.out.println("esto es d"+d);
                 MetaDatos1 metainfo = new MetaDatos1();
             try {
@@ -799,11 +984,11 @@ catch(Exception a){
 
                 Archivos x = new Archivos();
                 String c=x.obtenerDireccion("FilesMusic");
-                File arch= new File(c+listaCanciones.getSelectedValue().toString());
-                System.out.println(c+listaCanciones.getSelectedValue().toString());
+                File arch= new File(c+PanelListaCanciones.getSelectedValue().toString());
+                System.out.println(c+PanelListaCanciones.getSelectedValue().toString());
                 
-                File archivo2 = new File("FilesMusic" + File.separator+listaCanciones.getSelectedValue().toString());
-                System.out.println("FilesMusic" + File.separator+listaCanciones.getSelectedValue().toString());
+                File archivo2 = new File("FilesMusic" + File.separator+PanelListaCanciones.getSelectedValue().toString());
+                System.out.println("FilesMusic" + File.separator+PanelListaCanciones.getSelectedValue().toString());
                 miReproductor.control.open(arch);
             } catch (BasicPlayerException ex) {
                 Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
@@ -816,10 +1001,10 @@ catch(Exception a){
     * Contiene el evento del botón elminar. 
     */
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        if(listaCanciones.getSelectedValue()!=null)
-           modelodefecto.removeElement(listaCanciones.getSelectedValue());
-        if(playlist.getSelectedValue()!=null)
-            modelodefecto2.removeElement(playlist.getSelectedValue());// Elimminar la el elmento seleccionado de la lista
+        //if(listaCanciones.getSelectedValue()!=null)
+        //   modelodefecto.removeElement(listaCanciones.getSelectedValue());
+        if(PanelListaReproduccion.getSelectedValue()!=null)
+            modelodefecto2.removeElement(PanelListaReproduccion.getSelectedValue());// Elimminar la el elmento seleccionado de la lista
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     /*
@@ -831,16 +1016,45 @@ catch(Exception a){
        modelo.addElement(volumen);
     }//GEN-LAST:event_crearListaRMenuActionPerformed
 
-    private void jMenu1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenu1ActionPerformed
+    private void MenuPlayListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MenuPlayListActionPerformed
 
-    }//GEN-LAST:event_jMenu1ActionPerformed
+    }//GEN-LAST:event_MenuPlayListActionPerformed
 
     private void btnSiguenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSiguenteActionPerformed
-        
+        PanelListaReproduccion.setSelectedIndex(PanelListaReproduccion.getSelectedIndex()+1);
+        Archivos x = new Archivos();
+        String c=x.obtenerDireccion("FilesMusic");
+                File arch1= new File(c+PanelListaReproduccion.getSelectedValue().toString());
+        try {
+            miReproductor.control.open(arch1);
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            miReproductor.control.play();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_btnSiguenteActionPerformed
 
     private void btnAnteriorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAnteriorActionPerformed
-        // TODO add your handling code here:
+        PanelListaReproduccion.setSelectedIndex(PanelListaReproduccion.getSelectedIndex()-1);
+        Archivos x = new Archivos();
+        String c=x.obtenerDireccion("FilesMusic");
+                File arch1= new File(c+PanelListaReproduccion.getSelectedValue().toString());
+        try {
+            miReproductor.control.open(arch1);
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            miReproductor.control.play();
+        } catch (BasicPlayerException ex) {
+            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+
     }//GEN-LAST:event_btnAnteriorActionPerformed
 
     private void abrirplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_abrirplayActionPerformed
@@ -855,28 +1069,56 @@ catch(Exception a){
             modelodefecto2 = new DefaultListModel();
             //modelodefecto2.addElement("hola");
             listadereproduccionactual=lista.getText();
-            
+            //modelodefecto2.addElement("fsdfsaf");
             //listaActual.
           //  meta.agregarc(listaActual.obtenerDatos(0)[0]);
-            for(int i=0;listaActual.getTamaño()>i;i++){
-                modelodefecto2.addElement(listaActual.obtenerDatos(i)[0]);
+            /*for(int i=0;2>i-1;i++){
+                modelodefecto2.addElement(listaActual.obtenerDatos(0)[0]);
+                modelodefecto2.addElement("ffsfas");
                 
+            }*/
+            
+            
+            
+       try ( //Abro el stream, el fichero debe existir
+            FileReader fr = new FileReader(lista.getText()+".txt")) {
+                //Leemos el fichero y lo mostramos por pantalla
+            
+            int valor=fr.read()
+                    ;
+            String acumulador="";
+            while(valor!=-1){
+                if((char)valor=='@'){
+                    modelodefecto2.addElement(acumulador);
+                    System.out.println(acumulador);
+                    acumulador="";
+                }
+                if((char)valor!='@'){
+                    acumulador = acumulador+(char)valor;
+                    //System.out.println("ppppppppp");
+                } else {
+                    System.out.println(acumulador+"Esta en el acumulador");
+                    //acumulador=" ";
+                    
+                    
+                }
+                //System.out.print((char)valor);
+                valor=fr.read();
+                }
             }
-            playlist.setModel(modelodefecto2);
-
-         
-
-        
-        
+        catch(Exception a){
+            System.out.println("Lista no encontrada");
+        }
+            PanelListaReproduccion.setModel(modelodefecto2);
     }//GEN-LAST:event_abrirplayActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void agregarCancionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_agregarCancionActionPerformed
                 //Object selecc = listaCanciones.getSelectedValue();
                 modelodefecto2 = new DefaultListModel();
 
-                Object componentes =listaCanciones.getComponents();
+                Object componentes =PanelListaCanciones.getComponents();
                 ListModel modelol;
-                modelol= playlist.getModel();
+                modelol= PanelListaReproduccion.getModel();
                 DefaultListModel modelodefecto1;
                 
                 modelodefecto1 = new DefaultListModel();
@@ -887,19 +1129,19 @@ catch(Exception a){
                     
                 }
                 archivo = archivoSeleccionado.getSelectedFile();
-                Object pasando = listaCanciones.getSelectedValue();
+                Object pasando = PanelListaCanciones.getSelectedValue();
                 modelodefecto1.addElement(pasando.toString());
-                playlist.setModel(modelodefecto1);
+                PanelListaReproduccion.setModel(modelodefecto1);
               //  System.out.println("La cancion seleccionada tiene el indice "+ prueba);
                 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_agregarCancionActionPerformed
 
     private void guardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarActionPerformed
 
        //ListModel s; 
         String supers="";
         int contador=0;
-        ListModel a = playlist.getModel();
+        ListModel a = PanelListaReproduccion.getModel();
         
         System.out.println(a);
         for(int i=0;a.getSize()>i;i++){
@@ -925,6 +1167,14 @@ catch(Exception a){
         try {                                               
             Archivos x = new Archivos();
             String c=x.obtenerDireccion("FilesMusic");
+            try{
+                File borrar=new File(PanelListaCanciones.getSelectedValue().toString());
+                borrar.delete();
+            
+            }catch(Exception error){
+              System.out.println("No existio");
+            }
+            
             MetaDatos1 modificar= new MetaDatos1();
             System.out.println(canc);
             try {
@@ -948,7 +1198,7 @@ catch(Exception a){
                 
             }
             modificar.setyear(año.getText());
-            modificar.mp3file.save(listaCanciones.getSelectedValue().toString());
+            modificar.mp3file.save(PanelListaCanciones.getSelectedValue().toString());
            /* Archivos h = new Archivos();
             if(h.revisarCarpeta(canc)==true){
                     File borrado = new File(c+canc);
@@ -967,7 +1217,7 @@ catch(Exception a){
                 }*/
          //   h.redireccionarFichero(c+canc,null);
         } catch (IOException | NotSupportedException ex) {
-            Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("Los metadatos no se han podido guardar");
         }
         
         
@@ -978,73 +1228,65 @@ catch(Exception a){
     }//GEN-LAST:event_BuscadorActionPerformed
 
     private void buscadorCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscadorCActionPerformed
-        int tipo=0;
-        String cancionB = Buscador.getText();
-        //System.out.println("cancionB"+cancionB);
-        //System.out.println(tCanciones.obtenerDatos(1)[0]);
+        String texto = Buscador.getText();
+        
 
-        //AlgoritmosBusqueda algoritmoB = new AlgoritmosBusqueda(tCanciones);
-        //System.out.println(tCanciones.obtenerDatos(1)[1]);
+        int contador = 0;
+        System.out.println(nuevoDatos.obtenerDatos(0)[1]);
+        System.out.println(nuevoDatos.obtenerDatos(1)[1]);
+        System.out.println("hola");
+        int estado = 0;
+      if(estado == 1){
+        if(busquedaPor.getSelectedItem().toString()== "Artista"){
+            int tipo = 2;
+		for(contador = 0;contador < this.nuevoDatos.getTamaño();contador++){
+			String variable = this.nuevoDatos.obtenerDatos(contador)[tipo];
 
-        Archivos p = new Archivos();
-        String[] a;
-        a=p.leerArchivosCarpeta("FilesMusic", null);
-        System.out.println("Cancion numero 1"+a[0]);
-        System.out.println("Cancion numero 1"+a[1]);
-        System.out.println("Cancion numero 1"+a[2]);
-        MetaDatos1 pru=new MetaDatos1();
-        String[] arreglo = {"","","","",""};
-        Datos pi = new Datos(arreglo);
-                Archivos x = new Archivos();
-        String c=x.obtenerDireccion("FilesMusic");
-        for(int i = 0;a.length>i;i++){
-            try {
-                pru.agregarc(c+a[i]);
-            } catch (IOException | UnsupportedTagException | InvalidDataException ex) {
-                Logger.getLogger(VentanaP.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            arreglo[0]= pru.gettitulo();
-            arreglo[1]=pru.getartista();
-            arreglo[2]= pru.getartista();
-            arreglo[3]= pru.getyear();
-            arreglo[4]=a[i];
-            pi.añadirDatos(arreglo);
-       
+			if(variable == texto){
+                            estado = 1;
+                            break;
+			}
+		}
         }
-        AlgoritmosBusqueda g = new AlgoritmosBusqueda(pi);
-        System.out.print(g.buscarCancion(cancionB, 4));
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+        else if(busquedaPor.getSelectedItem().toString() == "Nombre"){
+            int tipo = 1;
+		for(contador = 0;contador < this.nuevoDatos.getTamaño();contador++){
+			String variable = this.nuevoDatos.obtenerDatos(contador)[tipo];
+
+			if(variable == texto){
+                            estado = 1;
+                            break;
+			}
+		}
+        }
+        else if(busquedaPor.getSelectedItem().toString()== "Álbum"){
+                int tipo = 3;
+		for(contador = 0;contador < this.nuevoDatos.getTamaño();contador++){
+			String variable = this.nuevoDatos.obtenerDatos(contador)[tipo];
+
+			if(variable == texto){
+                            estado = 1;
+                            break;
+			}
+		}
+     
+        }  
+        else if(busquedaPor.getSelectedItem().toString()== "Genero"){
+                int tipo = 4;
+		for(contador = 0;contador < this.nuevoDatos.getTamaño();contador++){
+			String variable = this.nuevoDatos.obtenerDatos(contador)[tipo];
+
+			if(variable == texto){
+                            estado = 1;
+                            break;
+			}
+		}
+                
+        }
+      }
+        PanelListaCanciones.setSelectedIndex(contador);
+       
+    //GEN-LAST:event_buscadorCActionPerformed
     }//GEN-LAST:event_buscadorCActionPerformed
 
     private void tituloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tituloActionPerformed
@@ -1052,13 +1294,27 @@ catch(Exception a){
     }//GEN-LAST:event_tituloActionPerformed
 
     private void albumActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_albumActionPerformed
-        // TODO add your handling code here:
+
     }//GEN-LAST:event_albumActionPerformed
+
+    private void busquedaPorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_busquedaPorActionPerformed
+
+    }//GEN-LAST:event_busquedaPorActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField Buscador;
+    private javax.swing.JLabel ListaRepActual;
+    private javax.swing.JMenuBar Menu;
+    private javax.swing.JMenu MenuPlayList;
+    private javax.swing.JPanel PanelAbajo;
+    private javax.swing.JPanel PanelBusqueda;
+    private javax.swing.JPanel PanelDatosCancion;
+    private javax.swing.JPanel PanelIcono;
+    private javax.swing.JList PanelListaCanciones;
+    public javax.swing.JList PanelListaReproduccion;
     private javax.swing.JButton abrirplay;
+    private javax.swing.JButton agregarCancion;
     private javax.swing.JTextField album;
     private javax.swing.JTextField artista;
     private javax.swing.JTextField año;
@@ -1069,33 +1325,24 @@ catch(Exception a){
     private javax.swing.JButton btnSiguente;
     public javax.swing.JButton btnStop;
     private javax.swing.JButton buscadorC;
+    private javax.swing.JComboBox busquedaPor;
     private javax.swing.JMenuItem crearListaRMenu;
     private javax.swing.JTextField genero;
     private javax.swing.JButton guardar;
     private javax.swing.JButton guardarCancion;
     private javax.swing.JLabel icono;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lalbum;
+    private javax.swing.JLabel lartista;
+    private javax.swing.JLabel laño;
+    private javax.swing.JLabel lgenero;
     private javax.swing.JTextField lista;
-    private javax.swing.JList listaCanciones;
     private javax.swing.JLabel ltiempo;
-    public javax.swing.JList playlist;
+    private javax.swing.JLabel ltitulo;
     private javax.swing.JLabel porsentaje;
     public javax.swing.JLabel reproduciendo;
     private javax.swing.JTextField titulo;

@@ -1,4 +1,4 @@
-package reproductormusica1;
+package tarea.programada1;
 
 /**
 * Esta clase permite la busqueda de datos utilizando la clase Datos

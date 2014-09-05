@@ -1,4 +1,4 @@
-package reproductormusica1;
+package tarea.programada1;
 /*
 *Importar librerias necesarias para el control y la reproduccion de archivos
 */

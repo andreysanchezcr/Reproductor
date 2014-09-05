@@ -1,4 +1,4 @@
-package reproductormusica1;
+package tarea.programada1;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;

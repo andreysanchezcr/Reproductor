@@ -1,4 +1,4 @@
-package reproductormusica1;
+package tarea.programada1;
 
 import java.io.*;
 import javax.swing.*;
@@ -73,19 +73,17 @@ public class Archivos{
 
 
                 try {
-                        InputStream entrada = new FileInputStream(direccion); //Obtiene los bytes del directorio
-                        OutputStream salida = new FileOutputStream(destino); //Lee los flujos de bytes
-                                
+                    OutputStream salida; 
+                    try (InputStream entrada = new FileInputStream(direccion) //Obtiene los bytes del directorio
+                    ) {                                
+                        salida = new FileOutputStream(destino); //Lee los flujos de bytes
                         byte[] contenido = new byte[1024];
                         int iniciador;
-
                         // Va leyendo el contenido de entrada y escribiendo en el de salida
-                        while ((iniciador = entrada.read(contenido)) > 0) { 
-                                salida.write(contenido, 0, iniciador);
+                        while ((iniciador = entrada.read(contenido)) > 0) {
+                            salida.write(contenido, 0, iniciador);
                         }
-
-                        // Cierre de archivos
-                        entrada.close(); 
+                    } //Lee los flujos de bytes
                         salida.close();
 
                 } catch (IOException ioe){
@@ -146,19 +144,22 @@ public class Archivos{
     *@param directorio Es la dirección personal del computador
     */
 
-    public String[] leerArchivosCarpeta(String directorio, String carpeta){
+    public String[][] leerArchivosCarpeta(String directorio, String carpeta){
 
     	File fichero = new File(directorio);
     	File[] arregloFichero = fichero.listFiles(); // Lista de ficheros
     	int cantidad = arregloFichero.length;
-    	String[] listaCanciones = new String[cantidad];
+    	String[][] listaCanciones = new String[cantidad][cantidad];
 
     	for(int contador = 0; contador < arregloFichero.length;contador ++){
 
-    		String cancion = arregloFichero[contador].getName(); // Guarda las direcciones
+    		String cancion = arregloFichero[contador].getName();
+                String cancion1 = arregloFichero[contador].getAbsolutePath();// Guarda las direcciones
 
             if (cancion.endsWith(".mp3")||cancion.endsWith(".wav")||cancion.endsWith(".ogg")){ // Busca solo archivos de musica
-                listaCanciones[contador]=cancion;
+                listaCanciones[0][contador]=cancion;
+                listaCanciones[1][contador]=cancion1;
+                
                 Archivos archivoTemp = new Archivos();
                 archivoTemp.redireccionarFichero(cancion,carpeta);
             } 
